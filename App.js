@@ -9,8 +9,6 @@ import {
   View
 } from 'react-native';
 
-const { ActivityCompletion } = NativeModules;
-
 export default class TestSign extends Component<{}> {
   requestCode = 0
 
@@ -23,10 +21,12 @@ export default class TestSign extends Component<{}> {
 
   async onPress() {
     if (Platform.OS === 'ios') {
-      alert('iOS is not currently supported.');
+      console.warn('iOS is not currently supported.');
       return;
     }
 
+    const { ActivityCompletion } = NativeModules;
+    
     ActivityCompletion.finish(
       ActivityCompletion.OK,
       "com.ixosign.SIGNED",
