@@ -2834,7 +2834,7 @@ istanbul-reports@^1.1.3:
   dependencies:
     handlebars "^4.0.3"
 
-ixo-module@^1.4.5:
+ixo-module@^1.4.6:
   version "1.4.6"
   resolved "https://registry.yarnpkg.com/ixo-module/-/ixo-module-1.4.6.tgz#51946828f1f19ddee05b69ef4297660a8d530b37"
   dependencies:
