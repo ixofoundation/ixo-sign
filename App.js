@@ -9,6 +9,8 @@ import {
   View
 } from 'react-native';
 
+import {Ixo} from "ixo-module";
+
 import * as Keychain from 'react-native-keychain';
 
 export default class TestSign extends Component<{}> {
@@ -17,14 +19,39 @@ export default class TestSign extends Component<{}> {
 
   constructor(props) {
     super(props);
+    
     this.state = {
-      text: props.content,
+      text1: props.content,
+      text: {message: 'This is a test'},
       username: '',
       password: '',
       service: TestSign._service,
       status: 'no key',
+      sovrinDID: ''
+    };
+  }
+
+  signText() {
+    const ixo = this.getIxo();
+    const sovId = ixo.cryptoUtil.generateSovrinDID(this.state.password);
+    var signature = ixo.cryptoUtil.getDocumentSignature(
+      sovId.secret.signKey, sovId.verifyKey, this.state.text);
+
+    console.log('bbb');
+    var signDate = (new Date()).toJSON();
+    var response = {
+      content: this.state.text,
+      signature: {
+        type: "Ed25519",
+        created: signDate,
+        publicKey: "0x" + this.state.sovrinDID.verifyKey,
+        creator: "0x" + this.state.sovrinDID.did,
+        signature: "0x" + signature
+      }
     };
 
+    console.log(response);
+    return response;
   }
 
   async onPress() {
@@ -33,31 +60,58 @@ export default class TestSign extends Component<{}> {
       return;
     }
 
+    var response = this.signText();
+    console.log('aaa');
     const { ActivityCompletion } = NativeModules;
 
     ActivityCompletion.finish(
       ActivityCompletion.OK,
       "com.ixosign.SIGNED",
-      { content: this.state.text });
+      response);
   }
 
   static isString (value) {
     return typeof value === 'string' || value instanceof String;
   };
 
-  static _service = 'IXOSTORE';
+  getIxo(){
+    //Hardcode in some text to sign
+    const ixo = new Ixo("https://ixo-node.herokuapp.com");
+    console.log('done ixo');
+    return ixo;
+  }
+
+  static _service = 'IXOSTORE1zzdz';
   loadKey() {
     let usernameTemp = 'DID:foobar';
     let passwordTemp = 'abc123';
-    credentialsTemp = { username: usernameTemp, password: passwordTemp };
+    const ixo = this.getIxo();
+
+    console.log('generated DID');
+
+    let credentialsTemp = {foo:'bar' };
     Keychain
       .getGenericPassword(TestSign._service)
       .then((credentials) => {
         if (credentials) {
+          console.log('creds loaded for %s', credentials.username);
+          console.log('creds loaded for %s', credentials.password);
+          this.setState({ ...credentials, status: 'Credentials exist and loaded!' });
           return Promise.resolve(true);
         } else {
+          // OK Nothing in the KeyStore
+          // Need to generate new pair...
           this.setState({ status: 'No credentials stored.' });
-          // Keychain library always returns string in android, bool in ios, regardless..  
+          // Keychain library always returns string in android, bool in ios, regardless..
+          console.log('gen creds');
+          const mnemonic = ixo.cryptoUtil.generateMnemonic();
+          const sovrinDID = ixo.cryptoUtil.generateSovrinDID(mnemonic);
+          console.log('done gen creds');
+          console.log("mn: %s", mnemonic);
+          console.log(sovrinDID.did);
+          credentialsTemp.username = sovrinDID.did;
+          credentialsTemp.password = mnemonic;
+          this.setState({ ...credentialsTemp, status: 'Credentials generated and loaded!' });
           return Keychain.setGenericPassword(credentialsTemp.username, credentialsTemp.password, TestSign._service);
         }
       }).then((result) => {
@@ -73,8 +127,8 @@ export default class TestSign extends Component<{}> {
         return Promise.reject('failed on getGenericPassword');
       })
       .then(credentials => {
-        console.log('set the credentials %s', JSON.stringify(credentials));
-        this.setState({ ...credentials, status: 'Credentials loaded!' });
+        console.log('set the credentials %s', this.state.username);
+
       })
       .catch((err) => {
         this.setState({ status: 'Could not load nor create credentials. ' + err });
@@ -86,7 +140,8 @@ export default class TestSign extends Component<{}> {
   }
 
   render() {
-    if (!this.props.content) {
+    console.log('cc1')
+    if (!this.state.text) {
       return (
         <View style={styles.container}>
           <Text>Nothing to sign!!!</Text>
@@ -99,8 +154,8 @@ export default class TestSign extends Component<{}> {
       <View style={styles.container}>
         <TextInput
           style={{ width: '100%' }}
-          value={this.state.text}
-          onChangeText={text => this.setState({ text: text })} />
+          value={ JSON.stringify(this.state.text) }
+          onChangeText={text => this.setState({ text:text })} />
         <Button onPress={() => this.onPress()} title="Sign" />
       </View>
     );
