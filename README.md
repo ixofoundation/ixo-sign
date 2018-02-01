@@ -42,7 +42,29 @@ react-native run-android
 
 ## Sideload the bundled app
 
-TODO
+If you only want to sideload a debug build of this app, here are the instructions:
+
+1. Edit `./android/app/build.gradle` to enable `bundleInDebug`.
+
+```
+project.ext.react = [
+    entryFile: "index.js",
+    bundleInDebug: true
+]
+```
+
+2. Create the debug `.apk`.
+
+```
+cd ./android
+./gradlew assembleDebug
+```
+
+3. Install the `.apk` with `adb`.
+
+```
+adb install app/build/outputs/apk/app-debug.apk
+```
 
 ## Run the app on an alternate packager
 
