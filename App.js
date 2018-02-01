@@ -13,6 +13,8 @@ import {Ixo} from "ixo-module";
 
 import * as Keychain from 'react-native-keychain';
 
+import AuthModal from './src/AuthModal';
+
 export default class TestSign extends Component<{}> {
   requestCode = 0
 
@@ -27,8 +29,12 @@ export default class TestSign extends Component<{}> {
       password: '',
       service: TestSign._service,
       status: 'no key',
-      sovrinDID: ''
+      sovrinDID: '',
+      authenticate: false,
     };
+
+    this._onAuthSuccess = this._onAuthSuccess.bind(this);
+    this._onAuthCancel = this._onAuthCancel.bind(this);
   }
 
   signText() {
@@ -150,6 +156,16 @@ export default class TestSign extends Component<{}> {
       );
     }
 
+    let authModal;
+    if (this.state.authenticate) {
+      authModal = (
+        <AuthModal
+          onSuccess={this._onAuthSuccess}
+          onCancel={this._onAuthCancel}
+        />
+      )
+    }
+
     return (
       <View style={styles.container}>
         <TextInput
@@ -157,8 +173,19 @@ export default class TestSign extends Component<{}> {
           value={ JSON.stringify(this.state.text) }
           onChangeText={text => this.setState({ text:text })} />
         <Button onPress={() => this.onPress()} title="Sign" />
+        <Button onPress={() => this.setState({authenticate: true})} title="Login" />
+        {authModal}
       </View>
     );
+  }
+  
+  _onAuthSuccess() {
+    this.setState({authenticate: false});
+    alert('Success!');
+  }
+
+  _onAuthCancel() {
+    this.setState({authenticate: false});
   }
 }
 
