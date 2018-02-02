@@ -22,8 +22,8 @@ export default class TestSign extends Component<{}> {
     super(props);
     
     this.state = {
-      text1: props.content,
-      text: {message: 'This is a test'},
+      text: props.content,
+      //text: {message: 'This is a test'},
       username: '',
       password: '',
       service: TestSign._service,
@@ -49,8 +49,8 @@ export default class TestSign extends Component<{}> {
       signature: {
         type: "Ed25519",
         created: signDate,
-        publicKey: "0x" + this.state.sovrinDID.verifyKey,
-        creator: "0x" + this.state.sovrinDID.did,
+        publicKey: "0x" + sovId.verifyKey,
+        creator: "0x" + sovId.did,
         signature: "0x" + signature
       }
     };
@@ -86,10 +86,8 @@ export default class TestSign extends Component<{}> {
     return ixo;
   }
 
-  static _service = 'IXOSTORE1zzdz';
+  static _service = 'IXOSTOREzz';
   loadKey() {
-    let usernameTemp = 'DID:foobar';
-    let passwordTemp = 'abc123';
     const ixo = this.getIxo();
 
     console.log('generated DID');
