@@ -11,6 +11,7 @@ Install the following prerequisites:
 - [Node LTS](https://nodejs.org/) (currently 8.9.4)
 - NPM v5.5.1
 - [Android Studio](https://developer.android.com/studio)
+- React Nodeify - `npm install -g rn-nodeify`
 
 Install the React Native CLI:
 
@@ -72,7 +73,7 @@ It's likely that you'll want to run this app at the same time you're debugging a
 
 ```
 react-native start --port=8082
-react-native run-android --no-packager
+react-native run-android --no-packager --port=8082
 ```
 
 When the app first starts, you're likely to get a red box exception. To resolve this exception, open the dev menu (`CMD+M` on Mac, `Menu` on Windows). Choose the `Dev Settings` option and change the `Debug server host & port for device` to `localhost:8082`.
