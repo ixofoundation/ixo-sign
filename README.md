@@ -11,6 +11,7 @@ Install the following prerequisites:
 - [Node LTS](https://nodejs.org/) (currently 8.9.4)
 - NPM v5.5.1
 - [Android Studio](https://developer.android.com/studio)
+- React Nodeify - `npm install -g rn-nodeify`
 
 Install the React Native CLI:
 
