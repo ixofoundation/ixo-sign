@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {
-  Text,
+  Button,
   StyleSheet,
+  Text,
   View,
-  Button
 } from 'react-native';
 
 import FingerprintScanner from 'react-native-fingerprint-scanner';
@@ -81,7 +81,12 @@ class AuthModal extends Component<{}> {
           onPress={() => this.setState({useFingerprint: true})} 
         />
       );
+    } else {
+      // TODO: check why fingerprint reader not available
+      // If no hardware, do nothing, if no fingerprint,
+      // add option to launch Android Security Settings
     }
+
     return (
       <View>
         {fingerprintButton}
