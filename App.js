@@ -5,9 +5,7 @@ import {
   NativeModules,
   Platform,
   StyleSheet,
-  TextInput,
   Text,
-  WebView,
   View
 } from 'react-native';
 
@@ -170,14 +168,7 @@ export default class TestSign extends Component<{}> {
 
     return (
       <View style={styles.container}>
-        <WebView
-          style={{
-            backgroundColor: 'rgba(255,255,255,0.8)',
-            width: Dimensions.get('window').width,
-          }}
-          source={{html: JSON.stringify(this.state.text)}}
-          scalesPageToFit={this.state.scalingEnabled}
-        />
+        <Text style={styles.jsonText}>{JSON.stringify(this.state.text, null, 2)}</Text>
         <View style={styles.buttonPanel}>
           <Button onPress={() => this.onPress()} title="Sign" />
           <Button onPress={() => this.setState({authenticate: true})} title="Login" />
@@ -208,5 +199,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center'
-  }
+  },
+  jsonText: Platform.select({
+    android: {
+      backgroundColor: 'white',
+      fontFamily: 'monospace'
+    },
+    ios: {}
+  })
 });
