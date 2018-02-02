@@ -4,7 +4,6 @@ import {
   NativeModules,
   Platform,
   StyleSheet,
-  TextInput,
   Text,
   View
 } from 'react-native';
@@ -168,12 +167,11 @@ export default class TestSign extends Component<{}> {
 
     return (
       <View style={styles.container}>
-        <TextInput
-          style={{ width: '100%' }}
-          value={ JSON.stringify(this.state.text) }
-          onChangeText={text => this.setState({ text:text })} />
-        <Button onPress={() => this.onPress()} title="Sign" />
-        <Button onPress={() => this.setState({authenticate: true})} title="Login" />
+        <Text style={styles.jsonText}>{JSON.stringify(this.state.text, null, 2)}</Text>
+        <View style={styles.buttonPanel}>
+          <Button onPress={() => this.onPress()} title="Sign" />
+          <Button onPress={() => this.setState({authenticate: true})} title="Login" />
+        </View>
         {authModal}
       </View>
     );
@@ -195,5 +193,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  }
+  },
+  buttonPanel: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
+  jsonText: Platform.select({
+    android: {
+      backgroundColor: 'white',
+      fontFamily: 'monospace'
+    },
+    ios: {}
+  })
 });
