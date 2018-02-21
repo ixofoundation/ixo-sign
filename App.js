@@ -14,7 +14,7 @@ import * as Keychain from 'react-native-keychain';
 
 import AuthModal from './src/AuthModal';
 
-export default class TestSign extends Component<{}> {
+export default class TestSign extends Component {
   requestCode = 0
 
 
@@ -77,7 +77,7 @@ export default class TestSign extends Component<{}> {
 
   static isString (value) {
     return typeof value === 'string' || value instanceof String;
-  };
+  }
 
   getIxo(){
     //Hardcode in some text to sign
@@ -131,6 +131,7 @@ export default class TestSign extends Component<{}> {
       })
       .then(credentials => {
         console.log('set the credentials %s', this.state.username);
+        console.log('credentials: ', credentials);
 
       })
       .catch((err) => {
