@@ -39,13 +39,20 @@ export default class TestSign extends Component<{}> {
   signText() {
     const ixo = this.getIxo();
     const sovId = ixo.cryptoUtil.generateSovrinDID(this.state.password);
+
+    var textToSign = {
+      did: "0x" + sovId.did,
+      data: this.state.text.data,
+      template: this.state.text.template
+    };
+
     var signature = ixo.cryptoUtil.getDocumentSignature(
-      sovId.secret.signKey, sovId.verifyKey, this.state.text);
+      sovId.secret.signKey, sovId.verifyKey, textToSign);
 
     console.log('bbb');
     var signDate = (new Date()).toJSON();
     var response = {
-      content: this.state.text,
+      payload: textToSign,
       signature: {
         type: "Ed25519",
         created: signDate,
