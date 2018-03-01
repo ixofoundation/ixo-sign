@@ -22,7 +22,7 @@ export default class TestSign extends Component<{}> {
     super(props);
     
     this.state = {
-      text: props.content,
+      text: (props.content == undefined || typeof props.content == 'object' ? props.content : JSON.parse(props.content)),
       //text: {message: 'This is a test'},
       username: '',
       password: '',
