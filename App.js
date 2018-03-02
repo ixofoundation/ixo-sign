@@ -171,11 +171,14 @@ export default class TestSign extends Component<{}> {
     }
 
     return (
-      <View style={styles.container}>
+      <View stle={styles.container}>
         <Text style={styles.jsonText}>{JSON.stringify(this.state.text, null, 2)}</Text>
-        <View style={styles.buttonPanel}>
+        <View padder style={styles.buttonPanel}>
+          <Text style={{ flex: 1}}></Text>
           <Button onPress={() => this.onPress()} title="Sign" />
+          <Text style={{ flex: 1 }}></Text>
           <Button onPress={() => this.setState({authenticate: true})} title="Login" />
+          <Text style={{ flex: 1 }}></Text>
         </View>
         {authModal}
       </View>
