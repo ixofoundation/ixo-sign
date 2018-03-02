@@ -22,7 +22,7 @@ export default class TestSign extends Component<{}> {
     super(props);
     
     this.state = {
-      text: props.content,
+      text: (props.content == undefined || typeof props.content == 'object' ? props.content : JSON.parse(props.content)),
       //text: {message: 'This is a test'},
       username: '',
       password: '',
@@ -39,13 +39,20 @@ export default class TestSign extends Component<{}> {
   signText() {
     const ixo = this.getIxo();
     const sovId = ixo.cryptoUtil.generateSovrinDID(this.state.password);
+
+    var textToSign = {
+      did: "0x" + sovId.did,
+      data: this.state.text.data,
+      template: this.state.text.template
+    };
+
     var signature = ixo.cryptoUtil.getDocumentSignature(
-      sovId.secret.signKey, sovId.verifyKey, this.state.text);
+      sovId.secret.signKey, sovId.verifyKey, textToSign);
 
     console.log('bbb');
     var signDate = (new Date()).toJSON();
     var response = {
-      content: this.state.text,
+      payload: textToSign,
       signature: {
         type: "Ed25519",
         created: signDate,
@@ -164,11 +171,14 @@ export default class TestSign extends Component<{}> {
     }
 
     return (
-      <View style={styles.container}>
+      <View stle={styles.container}>
         <Text style={styles.jsonText}>{JSON.stringify(this.state.text, null, 2)}</Text>
-        <View style={styles.buttonPanel}>
+        <View padder style={styles.buttonPanel}>
+          <Text style={{ flex: 1}}></Text>
           <Button onPress={() => this.onPress()} title="Sign" />
+          <Text style={{ flex: 1 }}></Text>
           <Button onPress={() => this.setState({authenticate: true})} title="Login" />
+          <Text style={{ flex: 1 }}></Text>
         </View>
         {authModal}
       </View>
